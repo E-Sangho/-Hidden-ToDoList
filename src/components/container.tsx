@@ -12,6 +12,7 @@ const Block = styled.div`
     margin-top: 72px;
     border-radius: 12px;
     display: flex;
+    flex-direction: column;
 `;
 
 function Container({ children }: IContainer) {

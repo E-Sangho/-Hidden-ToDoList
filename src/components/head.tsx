@@ -8,13 +8,11 @@ const HeadBlock = styled.div`
     align-items: center;
     margin: 0 auto;
     padding-top: 24px;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid #dfe6e9;
     flex-direction: column;
-    background-color: #00cec9;
     border-radius: 12px 12px 0 0;
     h1 {
         font-size: 36px;
-        color: #0984e3;
         font-weight: bold;
     }
     .head-day {
@@ -22,7 +20,9 @@ const HeadBlock = styled.div`
         display: flex;
         justify-content: right;
         margin-right: 40px;
+        margin-bottom: 12px;
         font-size: 24px;
+        color: #636e72;
     }
 `;
 

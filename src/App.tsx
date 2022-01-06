@@ -4,7 +4,9 @@ import ResetCSS from "./components/resetcss";
 import GlobalStyle from "./components/globalstyle";
 import Container from "./components/container";
 import ToDoHead from "./components/head";
-
+import ToDoList from "./components/todolist";
+import ListContainer from "./components/listcontainer";
+import CreateToDo from "./components/createtodo";
 const AddBtn = styled.button`
     background-color: blue;
 `;
@@ -30,22 +32,22 @@ function App() {
             <GlobalStyle />
             <Container>
                 <ToDoHead />
+                <CreateToDo />
+                {/* <form onSubmit={onSubmit}>
+                    <input
+                        value={toDo}
+                        onChange={onChange}
+                        type="text"
+                        placeholder="Write your ToDo"
+                    />
+                    <button>Add ToDo</button>
+                </form>
+                <ListContainer>
+                    {toDos.map((todo, index) => (
+                        <ToDoList check={false} todo={todo} />
+                    ))}
+                </ListContainer> */}
             </Container>
-            {/* <form onSubmit={onSubmit}>
-                <input
-                    value={toDo}
-                    onChange={onChange}
-                    type="text"
-                    placeholder="Write your ToDo"
-                />
-                <button>Add ToDo</button>
-            </form>
-            <hr />
-            <ul>
-                {toDos.map((todo, index) => (
-                    <li key={toDos.length - index}>{todo}</li>
-                ))}
-            </ul> */}
         </>
     );
 }
