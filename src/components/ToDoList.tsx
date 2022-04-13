@@ -1,18 +1,21 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { toDoSelector, categoryState, Category } from "../atoms";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import { toDoState, toDoSelector, categoryState, Category } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 import ToDoDrag from "./ToDoDrag";
 
 function ToDoList() {
-	const toDos = useRecoilValue(toDoSelector);
+	const [toDos, setToDos] = useRecoilState(toDoState);
 	const [category, setCategory] = useRecoilState(categoryState);
 	const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setCategory(event.currentTarget.value as any);
 	};
-	const onDragEnd = (args: any) => {
-		console.log(args);
+	const onDragEnd = ({ destination, source }: DropResult) => {
+		let newToDos = JSON.parse(JSON.stringify(toDos));
+		let moved = newToDos.splice(source.index, 1);
+		newToDos.splice(destination?.index, 0, ...moved);
+		setToDos(newToDos);
 	};
 	return (
 		<div>

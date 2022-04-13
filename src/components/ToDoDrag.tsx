@@ -1,3 +1,4 @@
+import React from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { IToDos } from "../atoms";
 
@@ -6,7 +7,6 @@ interface IToDoDrag {
 	index: number;
 }
 function ToDoDrag({ toDo, index }: IToDoDrag) {
-	const onDragEnd = () => {};
 	return (
 		<Draggable key={toDo.text} draggableId={toDo.text} index={index}>
 			{(provided) => (
@@ -22,4 +22,4 @@ function ToDoDrag({ toDo, index }: IToDoDrag) {
 	);
 }
 
-export default ToDoDrag;
+export default React.memo(ToDoDrag);
