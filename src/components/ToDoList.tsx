@@ -1,55 +1,54 @@
-import { useRecoilState, useRecoilValue } from "recoil";
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
-import { toDoState, toDoSelector, categoryState, Category } from "../atoms";
-import CreateToDo from "./CreateToDo";
-import ToDo from "./ToDo";
-import ToDoDrag from "./ToDoDrag";
+import { useRecoilState } from "recoil";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { toDoState } from "../atoms";
+import ToDoBoard from "./ToDoBoard";
+import styled from "styled-components";
+
+const Window = styled.div`
+	background-color: ${(props) => props.theme.dominantColor};
+	height: 100vh;
+`;
+
+const Wrapper = styled.div`
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin: 20px auto;
+	max-width: 720px;
+`;
+
+const Board = styled.div`
+	display: grid;
+	width: 100%;
+	gap: 20px;
+	grid-template-columns: repeat(3, 1fr);
+	border-radius: 5px;
+`;
 
 function ToDoList() {
 	const [toDos, setToDos] = useRecoilState(toDoState);
-	const [category, setCategory] = useRecoilState(categoryState);
-	const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		setCategory(event.currentTarget.value as any);
-	};
 	const onDragEnd = ({ destination, source }: DropResult) => {
-		let newToDos = JSON.parse(JSON.stringify(toDos));
-		let moved = newToDos.splice(source.index, 1);
-		newToDos.splice(destination?.index, 0, ...moved);
-		setToDos(newToDos);
+		console.log(toDos);
+		if (destination?.droppableId === source.droppableId) {
+			// do something
+		}
 	};
 	return (
-		<div>
+		<Window>
 			<h1>ToDoList</h1>
-			<hr />
-			<select value={category} onChange={onChange}>
-				<option value={Category.ToDo}>ToDo</option>
-				<option value={Category.Doing}>Doing</option>
-				<option value={Category.Done}>Done</option>
-			</select>
-			<CreateToDo />
-			<hr />
 			<DragDropContext onDragEnd={onDragEnd}>
-				<ul>
-					<Droppable droppableId="one">
-						{(provided) => (
-							<div
-								ref={provided.innerRef}
-								{...provided.droppableProps}
-							>
-								{toDos.map((toDo, index) => (
-									<ToDoDrag
-										key={toDo.text}
-										index={index}
-										toDo={toDo}
-									/>
-								))}
-								{provided.placeholder}
-							</div>
-						)}
-					</Droppable>
-				</ul>
+				<Wrapper>
+					<Board>
+						<ToDoBoard toDos={toDos["ToDo"]} droppableId={"ToDo"} />
+						<ToDoBoard
+							toDos={toDos["Doing"]}
+							droppableId={"Doing"}
+						/>
+						<ToDoBoard toDos={toDos["Done"]} droppableId={"Done"} />
+					</Board>
+				</Wrapper>
 			</DragDropContext>
-		</div>
+		</Window>
 	);
 }
 
