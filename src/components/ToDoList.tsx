@@ -27,10 +27,37 @@ const Board = styled.div`
 
 function ToDoList() {
 	const [toDos, setToDos] = useRecoilState(toDoState);
-	const onDragEnd = ({ destination, source }: DropResult) => {
-		console.log(toDos);
+	const onDragEnd = ({ destination, draggableId, source }: DropResult) => {
+		if (!destination) return;
 		if (destination?.droppableId === source.droppableId) {
-			// do something
+			setToDos((oldToDos) => {
+				let copiedToDos = JSON.parse(
+					JSON.stringify(oldToDos[source.droppableId])
+				);
+				copiedToDos.splice(source.index, 1);
+				copiedToDos.splice(destination.index, 0, draggableId);
+				return {
+					...oldToDos,
+					[source.droppableId]: copiedToDos,
+				};
+			});
+		}
+		if (destination?.droppableId !== source.droppableId) {
+			setToDos((oldToDos) => {
+				let desCopy = JSON.parse(
+					JSON.stringify(oldToDos[destination.droppableId])
+				);
+				let sourceCopy = JSON.parse(
+					JSON.stringify(oldToDos[source.droppableId])
+				);
+				sourceCopy.splice(source.index, 1);
+				desCopy.splice(destination.index, 0, draggableId);
+				return {
+					...oldToDos,
+					[destination.droppableId]: desCopy,
+					[source.droppableId]: sourceCopy,
+				};
+			});
 		}
 	};
 	return (
