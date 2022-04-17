@@ -2,6 +2,7 @@ import { Droppable } from "react-beautiful-dnd";
 import ToDoDrag from "./ToDoDrag";
 import styled from "styled-components";
 import { DraggableId } from "react-beautiful-dnd";
+import { ToDo } from "../atoms";
 
 interface IToDoWrapper {
 	isDraggingOver: boolean;
@@ -14,10 +15,10 @@ const ToDoWrapper = styled.div<IToDoWrapper>`
 	text-color: ${(props) => props.theme.textColor};
 	background-color: ${(props) => {
 		return props.isDraggingOver
-			? "blue"
+			? "#F88100"
 			: props.draggingFromThisWith
-			? "pink"
-			: "red";
+			? "#2441B1"
+			: "transparent";
 	}};
 	flex-grow: 1;
 	transition: background-color 0.2s ease-in-out;
@@ -40,7 +41,7 @@ const Title = styled.div`
 `;
 
 interface IToDoBoard {
-	toDos: string[];
+	toDos: ToDo[];
 	droppableId: string;
 }
 
@@ -59,7 +60,11 @@ function ToDoBoard({ toDos, droppableId }: IToDoBoard) {
 						)}
 					>
 						{toDos.map((toDo, index) => (
-							<ToDoDrag key={toDo} index={index} toDo={toDo} />
+							<ToDoDrag
+								key={toDo.id}
+								index={index}
+								toDo={toDo.text}
+							/>
 						))}
 						{provided.placeholder}
 					</ToDoWrapper>
