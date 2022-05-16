@@ -2,7 +2,8 @@ import { Droppable } from "react-beautiful-dnd";
 import ToDoDrag from "./ToDoDrag";
 import styled from "styled-components";
 import { DraggableId } from "react-beautiful-dnd";
-import { ToDo } from "../atoms";
+import { ToDo, toDoState } from "../atoms";
+import { useSetRecoilState } from "recoil";
 
 interface IToDoWrapper {
 	isDraggingOver: boolean;
@@ -25,19 +26,37 @@ const ToDoWrapper = styled.div<IToDoWrapper>`
 `;
 
 const BoardWrapper = styled.div`
+	width: 100%;
 	background-color: ${(props) => props.theme.bgColor};
 	border-radius: 6px;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 `;
 
 const Title = styled.div`
-	margin: 12px auto;
+	margin: 12px 8px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	font-weight: bold;
+	font-size: 18px;
 	color: ${(props) => props.theme.textColor};
+`;
+
+const DeleteButton = styled.div`
+	width: 24px;
+	height: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	font-size: 20px;
+	color: white;
+	background-color: #ff4d4d;
+	position: absolute;
+	top: 8px;
+	right: 8px;
 `;
 
 interface IToDoBoard {
@@ -46,9 +65,19 @@ interface IToDoBoard {
 }
 
 function ToDoBoard({ toDos, droppableId }: IToDoBoard) {
+	const setToDos = useSetRecoilState(toDoState);
+
+	const onClick = () => {
+		setToDos((oldToDos) => {
+			let copiedToDos = JSON.parse(JSON.stringify(oldToDos));
+			delete copiedToDos[droppableId];
+			return copiedToDos;
+		});
+	};
 	return (
 		<BoardWrapper>
 			<Title>{droppableId}</Title>
+			<DeleteButton onClick={onClick}>-</DeleteButton>
 			<Droppable droppableId={droppableId}>
 				{(provided, snapshot) => (
 					<ToDoWrapper
@@ -64,6 +93,7 @@ function ToDoBoard({ toDos, droppableId }: IToDoBoard) {
 								key={toDo.id}
 								index={index}
 								toDo={toDo.text}
+								droppableId={droppableId}
 							/>
 						))}
 						{provided.placeholder}
