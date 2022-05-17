@@ -1,10 +1,11 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { CreateCategory, toDoState } from "../atoms";
+import { ModalActive, toDoState } from "../atoms";
 import ToDoBoard from "./ToDoBoard";
 import styled from "styled-components";
 import AddToDo from "./AddToDo";
 import AddCategory from "./AddCategory";
+import Modal from "./Modal";
 
 const Title = styled.div`
 	width: 100%;
@@ -18,8 +19,8 @@ const Title = styled.div`
 `;
 
 const Window = styled.div`
-	background-color: ${(props) => props.theme.dominantColor};
-	height: 100vh;
+	width: 100%;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 `;
@@ -43,6 +44,7 @@ const Board = styled.div`
 
 function ToDoList() {
 	const [toDos, setToDos] = useRecoilState(toDoState);
+	const modalActive = useRecoilValue(ModalActive);
 
 	const onDragEnd = ({ destination, draggableId, source }: DropResult) => {
 		if (!destination) return;
@@ -81,6 +83,7 @@ function ToDoList() {
 	};
 	return (
 		<Window>
+			{modalActive && <Modal visible={modalActive} />}
 			<Title>ToDoList</Title>
 			<AddToDo />
 			<DragDropContext onDragEnd={onDragEnd}>

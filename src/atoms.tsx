@@ -38,3 +38,13 @@ export const CreateCategory = atom({
 	key: "CreateCategory",
 	default: false,
 });
+
+export const ModalActive = atom({
+	key: "Modal",
+	default: false,
+});
+
+export const SelectedId = atom({
+	key: "SelectedId",
+	default: "",
+});

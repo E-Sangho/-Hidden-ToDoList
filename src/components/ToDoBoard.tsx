@@ -1,9 +1,9 @@
 import { Droppable } from "react-beautiful-dnd";
 import ToDoDrag from "./ToDoDrag";
 import styled from "styled-components";
-import { DraggableId } from "react-beautiful-dnd";
-import { ToDo, toDoState } from "../atoms";
+import { ModalActive, SelectedId, ToDo, toDoState } from "../atoms";
 import { useSetRecoilState } from "recoil";
+import { useState } from "react";
 
 interface IToDoWrapper {
 	isDraggingOver: boolean;
@@ -66,18 +66,39 @@ interface IToDoBoard {
 
 function ToDoBoard({ toDos, droppableId }: IToDoBoard) {
 	const setToDos = useSetRecoilState(toDoState);
+	const setModalActive = useSetRecoilState(ModalActive);
+	const SetDroppableId = useSetRecoilState(SelectedId);
+	const [isMouseEnter, setIsMouseEnter] = useState(false);
 
-	const onClick = () => {
-		setToDos((oldToDos) => {
-			let copiedToDos = JSON.parse(JSON.stringify(oldToDos));
-			delete copiedToDos[droppableId];
-			return copiedToDos;
-		});
+	const mouseEnterHandler = () => {
+		setIsMouseEnter(true);
 	};
+
+	const mouseLeaveHandler = () => {
+		setIsMouseEnter(false);
+	};
+	const onClick = () => {
+		if (toDos.length > 0) {
+			SetDroppableId(droppableId);
+			setModalActive(true);
+		} else {
+			setToDos((oldToDos) => {
+				let copiedToDos = JSON.parse(JSON.stringify(oldToDos));
+				delete copiedToDos[droppableId];
+				return copiedToDos;
+			});
+		}
+	};
+
 	return (
-		<BoardWrapper>
+		<BoardWrapper
+			onMouseEnter={mouseEnterHandler}
+			onMouseLeave={mouseLeaveHandler}
+		>
 			<Title>{droppableId}</Title>
-			<DeleteButton onClick={onClick}>-</DeleteButton>
+			{isMouseEnter && droppableId !== "ToDo" && (
+				<DeleteButton onClick={onClick}>-</DeleteButton>
+			)}
 			<Droppable droppableId={droppableId}>
 				{(provided, snapshot) => (
 					<ToDoWrapper

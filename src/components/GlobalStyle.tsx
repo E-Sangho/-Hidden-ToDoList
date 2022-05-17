@@ -53,6 +53,13 @@ a {
   color: inherit;
   text-decoration: none;
 }
+html, body, body > #root, body > #root > div {
+	height: 100%;
+}
+
+body {
+	background-color: ${(props) => props.theme.dominantColor};
+}
 `;
 
 export default GlobalStyle;
